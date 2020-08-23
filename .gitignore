@@ -1,0 +1,20 @@
+
+# python
+__pycache__/
+build/
+dist/
+*.pyc
+*.egg-info
+*.egg
+
+# testing
+htmlcov/
+.coverage
+coverage.xml
+coverage.json
+
+# virtual environment
+venv/
+
+# junk
+.DS_Store

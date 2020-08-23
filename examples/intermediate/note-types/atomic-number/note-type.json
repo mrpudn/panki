@@ -1,0 +1,19 @@
+{
+  "id": 1598968890018,
+  "name": "Element Atomic Number",
+  "fields": [
+    "Element",
+    "AtomicNumber"
+  ],
+  "css": "@/note-types/common.css",
+  "cardTypes": [
+    {
+      "name": "Forward",
+      "template": "template.forward.html"
+    },
+    {
+      "name": "Reverse",
+      "template": "template.reverse.html"
+    }
+  ]
+}

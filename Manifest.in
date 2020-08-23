@@ -1,0 +1,3 @@
+
+recursive-include panki/metadata *
+recursive-include panki/templates *

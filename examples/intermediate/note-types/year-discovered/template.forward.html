@@ -1,0 +1,15 @@
+<template>
+  <front>
+    What year was the element <b>{{Element}}</b> discovered?
+  </front>
+  <back>
+    {{FrontSide}}
+    <hr id="answer">
+    {{#YearDiscovered}}
+      {{YearDiscovered}}
+    {{/YearDiscovered}}
+    {{^YearDiscovered}}
+      {{Element}} has been around since ancient times.
+    {{/YearDiscovered}}
+  </back>
+</template>

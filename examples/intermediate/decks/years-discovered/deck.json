@@ -1,0 +1,11 @@
+{
+  "id": 1598968890025,
+  "name": "Periodic Table of Elements :: Years Discovered",
+  "package": "@/packages/years-discovered.apkg",
+  "notes": [
+    {
+      "type": "Element Year Discovered",
+      "data": "years-discovered.csv"
+    }
+  ]
+}

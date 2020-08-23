@@ -1,0 +1,11 @@
+{
+  "id": 1598968890023,
+  "name": "Periodic Table of Elements :: Symbols",
+  "package": "@/packages/symbols.apkg",
+  "notes": [
+    {
+      "type": "Element Symbol",
+      "data": "symbols.csv"
+    }
+  ]
+}

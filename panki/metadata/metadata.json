@@ -1,0 +1,27 @@
+{
+  "name": "panki",
+  "version": "0.0.1",
+  "url": "https://gitlab.com/x4ku/panki",
+  "description": "A project management tool for Anki deck builders",
+  "keywords": "panki anki flashcard deck project",
+  "author": {
+    "name": "Zach McAuliffe",
+    "email": "zach.mcauliffe@gmail.com"
+  },
+  "cli": "panki=panki.main:main",
+  "classifiers": [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+  ],
+  "requires": {
+    "python": ">=3.6",
+    "packages": [
+      "anki==2.1.30",
+      "beautifulsoup4==4.9.1",
+      "click==7.1.2",
+      "Jinja2==2.11.2",
+      "PyYAML==5.3.1"
+    ]
+  }
+}

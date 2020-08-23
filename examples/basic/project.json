@@ -1,0 +1,29 @@
+{
+  "name": "Periodic Table of Elements",
+  "noteTypes": [
+    {
+      "id": 1598319985447,
+      "name": "Element Symbol",
+      "fields": ["Element", "Symbol"],
+      "cardTypes": [
+        {
+          "name": "Element Symbol",
+          "template": "template.html"
+        }
+      ]
+    }
+  ],
+  "decks": [
+    {
+      "id": 1598319986451,
+      "name": "Element Symbols",
+      "package": "deck.apkg",
+      "notes": [
+        {
+          "type": "Element Symbol",
+          "data": "data.csv"
+        }
+      ]
+    }
+  ]
+}

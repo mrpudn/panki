@@ -1,0 +1,27 @@
+<template>
+  <style>
+    .card {
+      font-family: arial;
+      font-size: 20px;
+      text-align: center;
+      color: black;
+      background-color: white;
+    }
+    .symbol {
+      font-size: 1.5em;
+      border: 2px solid black;
+      margin: 5px;
+      padding: 10px;
+    }
+  </style>
+  <front>
+    What is the symbol for <b>{{Element}}</b>?
+  </front>
+  <back>
+    {{FrontSide}}
+    <hr id="answer">
+    <span class="symbol">
+      {{Symbol}}
+    </span>
+  </back>
+</template>

@@ -1,0 +1,11 @@
+{
+  "id": 1598968890024,
+  "name": "Periodic Table of Elements :: Atomic Numbers",
+  "package": "@/packages/atomic-numbers.apkg",
+  "notes": [
+    {
+      "type": "Element Atomic Number",
+      "data": "atomic-numbers.csv"
+    }
+  ]
+}

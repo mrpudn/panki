@@ -1,0 +1,6 @@
+[flake8]
+exclude =
+  venv/,
+  build/
+per-file-ignores =
+  panki/*/__init__.py:F401

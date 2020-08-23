@@ -1,0 +1,22 @@
+{
+  "id": 1598968890017,
+  "name": "Element Symbol",
+  "fields": [
+    "Element",
+    "Symbol"
+  ],
+  "css": [
+    "@/note-types/common.css",
+    "@/note-types/symbol.css"
+  ],
+  "cardTypes": [
+    {
+      "name": "Forward",
+      "template": "template.forward.html"
+    },
+    {
+      "name": "Reverse",
+      "template": "template.reverse.html"
+    }
+  ]
+}

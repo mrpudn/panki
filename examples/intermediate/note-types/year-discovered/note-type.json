@@ -1,0 +1,19 @@
+{
+  "id": 1598968890020,
+  "name": "Element Year Discovered",
+  "fields": [
+    "Element",
+    "YearDiscovered"
+  ],
+  "css": "@/note-types/common.css",
+  "cardTypes": [
+    {
+      "name": "Forward",
+      "template": "template.forward.html"
+    },
+    {
+      "name": "Reverse",
+      "template": "template.reverse.html"
+    }
+  ]
+}

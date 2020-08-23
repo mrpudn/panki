@@ -1,0 +1,8 @@
+[run]
+branch = True
+command_line = -m unittest
+source = panki
+
+[report]
+fail_under = 75
+precision = 1

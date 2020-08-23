@@ -1,0 +1,14 @@
+{
+  "name": "Periodic Table of Elements",
+  "package": "@/packages/periodic-table.apkg",
+  "noteTypes": [
+    "note-types/symbol/note-type.json",
+    "note-types/atomic-number/note-type.json",
+    "note-types/year-discovered/note-type.json"
+  ],
+  "decks": [
+    "decks/symbols/deck.json",
+    "decks/atomic-numbers/deck.json",
+    "decks/years-discovered/deck.json"
+  ]
+}
