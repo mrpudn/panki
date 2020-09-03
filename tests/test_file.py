@@ -417,8 +417,6 @@ class TestFile(unittest.TestCase):
             )
         _open.assert_called_with(filename, 'r')
 
-    # ...
-
     def test_read_raw_strip_nonempty(self):
         filename = 'file.txt'
         lines = ['', ' ', ' foo ', ' ', '']
