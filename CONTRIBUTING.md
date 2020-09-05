@@ -89,6 +89,16 @@ To uninstall the project:
 $ pip uninstall panki
 ```
 
+### CICD pipeline
+
+If you're working on the CICD pipeline, it is highly recommended that you test
+your changes to `.gitlab-ci.yml` locally using [gitlab-runner] and [Docker].
+
+For example, to execute the `build` job using the docker executor:
+```sh
+$ gitlab-runner exec docker build
+```
+
 ## Releases
 
 This section is mainly for use by project maintainers.
@@ -163,3 +173,5 @@ the changed metadata file should merged to master.
 [PyPI]: https://pypi.org
 
 [Using TestPyPI]: https://packaging.python.org/guides/using-testpypi/
+[gitlab-runner]: https://gitlab.com/gitlab-org/gitlab-runner
+[Docker]: https://www.docker.com/

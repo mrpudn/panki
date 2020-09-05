@@ -1,5 +1,8 @@
 # panki
 
+[![pipeline status](https://gitlab.com/x4ku/panki/badges/master/pipeline.svg)](https://gitlab.com/x4ku/panki/-/commits/master)
+[![coverage report](https://gitlab.com/x4ku/panki/badges/master/coverage.svg)](https://gitlab.com/x4ku/panki/-/commits/master)
+
 A project management tool for Anki deck builders.
 
 ## Contents

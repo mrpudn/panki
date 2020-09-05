@@ -16,5 +16,8 @@ coverage.json
 # virtual environment
 venv/
 
+# gitlab-runner
+builds/
+
 # junk
 .DS_Store

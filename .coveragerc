@@ -5,4 +5,3 @@ source = panki
 
 [report]
 fail_under = 75
-precision = 1

@@ -1,0 +1,17 @@
+image: python:3.7
+
+before_script:
+  - pip install virtualenv
+
+build:
+  script:
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install -r requirements-dev.txt
+    - flake8
+    - coverage run
+    - coverage report
+    - coverage xml
+  artifacts:
+    reports:
+      junit: coverage.xml
