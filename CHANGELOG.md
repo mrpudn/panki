@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### [Unreleased]
 #### Added
+- Gitlab CI pipeline integration
 - `CHANGELOG.md` and backfilled notes for version 0.0.1
 
 ### [0.0.1] - 2020-09-03
