@@ -27,9 +27,16 @@ The format is based on [Keep a Changelog], and this project adheres to
 ## Releases
 
 ### [Unreleased]
+...
+
+### [0.1.0] - 2020-11-20
 #### Added
 - Gitlab CI pipeline integration
 - `CHANGELOG.md` and backfilled notes for version 0.0.1
+#### Changed
+- Introduced classes for project configuration
+- Reorganized code related to packaging and collections
+- Removed dependency on Jinja
 
 ### [0.0.1] - 2020-09-03
 #### Added
@@ -44,6 +51,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 <!-- releases -->
 
 [Unreleased]: https://gitlab.com/x4ku/panki/-/tree/master/
+[0.1.0]: https://gitlab.com/x4ku/panki/-/tree/0.1.0
 [0.0.1]: https://gitlab.com/x4ku/panki/-/tree/0.0.1
 
 

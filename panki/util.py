@@ -22,7 +22,7 @@ def strip_lines(lines):
 
 
 def generate_id():
-    # sleep to force unique IDs to be generated for consecutive calls
+    # sleep to ensure unique IDs are generated for consecutive calls
     sleep(0.001)
     return round(timestamp() * 1000)
 

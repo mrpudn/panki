@@ -476,7 +476,7 @@ The following command will scaffold out an alternative project structure in
 which all of the project configuration is stored in `project.json` and a `data/`
 directory, `templates/` directory, and `styles/` directory are used instead:
 ```sh
-panki create project periodic-table \
+$ panki create project periodic-table \
     \
     --name "Periodic Table of Elements" \
     --package packages/periodic-table.apkg \

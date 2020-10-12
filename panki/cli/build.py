@@ -1,8 +1,8 @@
 import click
 from .cli import cli
-from ..project import load_project_files, load_project_config
+from ..config import load_project
+from ..package import build_project
 from ..util import bad_param
-from ..packaging import package_project
 
 
 @cli.command()
@@ -10,10 +10,9 @@ from ..packaging import package_project
     'directory', type=click.Path(file_okay=False, exists=True), default='.')
 def build(directory):
     """Build Anki package files from a panki project."""
-    config = load_project_config(directory)
-    if not config:
+    project = load_project(directory)
+    if not project:
         bad_param(
             'directory',
             'The directory does not contain a project config file')
-    files = load_project_files(config)
-    package_project(config, files, directory)
+    build_project(project)

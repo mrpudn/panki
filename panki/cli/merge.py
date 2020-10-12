@@ -1,6 +1,6 @@
 import click
 from .cli import cli
-from ..packaging import is_anki_deck_package
+from ..package import is_anki_deck_package
 from ..util import bad_param
 
 
