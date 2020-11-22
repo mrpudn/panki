@@ -45,6 +45,7 @@ class TestPackage(unittest.TestCase):
         file.path = 'foo.apkg'
         _create_file.return_value = file
         collection = MagicMock()
+        collection.path = 'collection.anki2'
         exporter = MagicMock()
         _anki.exporting.AnkiPackageExporter.return_value = exporter
         panki.package.export_package(collection, 'foo.apkg')
@@ -59,7 +60,7 @@ class TestPackage(unittest.TestCase):
         file.path = 'foo.apkg'
         _create_file.return_value = file
         collection = MagicMock()
-        collection.path = 'build'
+        collection.path = 'collection.anki2'
         exporter = MagicMock()
         _anki.exporting.AnkiPackageExporter.return_value = exporter
         panki.package.export_package(collection, 'foo.apkg', deck_id=123)
