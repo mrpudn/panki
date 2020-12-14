@@ -11,6 +11,7 @@ def build_collection(project):
     try:
         add_note_types(collection, project)
         add_decks(collection, project)
+        add_media(collection, project)
     except Exception as ex:
         raise ex
     finally:
@@ -75,6 +76,15 @@ def add_decks(collection, project):
                     )
                     note.guid = base64.b64encode(guid.encode('utf-8'))
                     collection.add_note(note, deck_config.id)
+
+
+def add_media(collection, project):
+    # add all files in media directories
+    for media_dir in project.media:
+        media_dir_path = project.resolve_path(media_dir)
+        for file in os.listdir(media_dir_path):
+            file_path = os.path.join(media_dir_path, file)
+            collection.media.add_file(file_path)
 
 
 def dump_collection(collection, path):

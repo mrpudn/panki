@@ -9,10 +9,8 @@ A project management tool for Anki deck builders.
 
 - [Installation]
 - [Getting Started]
-- [Converting an Anki Package]
 - [Scaffolding]
   - [Project Scaffolding]
-  - [Component Scaffolding]
 - [Configuration]
   - [Project Configuration]
   - [Note Type Configuration]
@@ -23,7 +21,7 @@ A project management tool for Anki deck builders.
 - [Templates and Styling]
 - [Working with Anki Collections]
   - [Dumping Package Files]
-  - [Merging Package Files]
+  - [Exporting Anki Collections]
 - [License]
 
 ## Installation
@@ -43,9 +41,6 @@ This section will walk you through setting up a basic project with panki. Panki
 is very flexible - if the basic project structure is too simple for your needs,
 please see the [`examples/`] directory for example project structures and the
 [Configuration] section for more information about configuring your project.
-
-If you would like to convert an existing deck or group of decks into a panki
-project, please see the [Converting an Anki Package] section.
 
 ## Getting Started
 
@@ -264,35 +259,6 @@ from the backup.**
 
 Please refer to the rest of this readme for more advanced ways to use panki in
 your deck building workflow.
-
-## Converting an Anki Package
-
----
-
-This functionality is not yet supported, but will be added in the future.
-
----
-
-If you have an existing deck or group of decks in Anki that you'd like to
-convert to a panki project, you can export them (`File` > `Export`) to an
-`.apkg` file and convert them to a panki project using the `panki convert`
-command.
-
-For example, if you have one or more existing decks for memorizing information
-from the periodic table of elements, you can export the decks from Anki to a
-file called `periodic-table.apkg` and convert them to a panki project with the
-following command:
-```py
-$ panki convert periodic-table.apkg periodic-table
-```
-
-This command will read `periodic-table.apkg` and create a panki project in the
-`periodic-table/` directory within the current directory. Please make sure that
-the `periodic-table/` directory does not already exist - for safety reasons,
-panki will not create the project if the directory already exists.
-
-Please refer to the rest of this readme for more information about managing your
-project with panki.
 
 ## Scaffolding
 
@@ -523,10 +489,6 @@ periodic-table/
     └── year-discovered.reverse.html
 ```
 
-### Component Scaffolding
-
-...
-
 ## Configuration
 
 The `project.json` file contains configuration for a panki project. It provides
@@ -585,9 +547,14 @@ project. See [Deck Configuration] for more information.
 
 The optional `package` field can also be provided. If provided, all of the decks
 in the project will be combined into a single `.apkg` file. Set the value of
-this field to the path where the `.apkg` file should be created. You can also
-use the `panki merge` command to merge `.apkg` files together - See the
-[Merging Package Files] section for more information.
+this field to the path where the `.apkg` file should be created.
+
+The optional `media` field can also be provided. If provided, all of the files
+in the directories specified will be copied to the Anki collection's
+`collection.media/` directory, making them available to your decks. Set the
+value of this field to a list of paths to your media directories. Only files
+will be copied - directories will be ignored, as Anki does not supported media
+subdirectories.
 
 ### Note Type Configuration
 
@@ -1084,13 +1051,24 @@ a `table.json` file with metadata about the table, a `schema.sql` file with the
 table schema in the form of a SQL `CREATE` command, and a `rows.csv` file with
 the rows of the table in CSV format, if applicable.
 
-### Merging Package Files
+See `panki dump -h` for more information.
 
-...
+### Exporting Anki Collections
 
-### Packaging Anki Collections
+You can export an Anki collection (`collection.anki2`) into an Anki package
+(`.apkg` or `.colpkg`) using the `panki export` command:
+```sh
+$ panki export path/to/collection.anki2 path/to/package.colpkg
+```
 
-...
+If you'd like to only export a specific deck from the collection, you can
+specify the deck ID using the `--deck` option:
+```
+$ panki export path/to/collection.anki2 path/to/package.apkg \
+      --deck 1234567890123
+```
+
+See `panki export -h` for more information.
 
 ## License
 
@@ -1105,11 +1083,9 @@ project.
 
 [Installation]: #installation
 [Getting Started]: #getting-started
-[Converting an Anki Package]: #converting-an-anki-package
 
 [Scaffolding]: #scaffolding
 [Project Scaffolding]: #project-scaffolding
-[Component Scaffolding]: #component-scaffolding
 
 [Configuration]: #configuration
 [Project Configuration]: #project-configuration
@@ -1124,8 +1100,7 @@ project.
 
 [Working with Anki Collections]: #working-with-anki-collections
 [Dumping Package Files]: #dumping-anki-packages
-[Merging Package Files]: #merging-anki-packages
-[Packaging Anki Collections]: #packaging-anki-collections
+[Exporting Anki Collections]: #exporting-anki-collections
 
 [License]: #license
 

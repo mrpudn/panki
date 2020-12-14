@@ -25,7 +25,7 @@ class ProjectConfig(Config):
 
     def __init__(
             self, path='project.json', file=None, name=None, package=None,
-            note_types=None, decks=None):
+            note_types=None, decks=None, media=None):
         super().__init__(path, file)
         if not file:
             self.file = create_config_file(path)
@@ -34,6 +34,7 @@ class ProjectConfig(Config):
         self.package = package or config.get('package')
         self.note_types = note_types or []
         self.decks = decks or []
+        self.media = media or []
 
     @property
     def build_dir(self):
@@ -124,6 +125,8 @@ class ProjectConfig(Config):
         yield ('noteTypes', note_types)
         decks = [config.path or dict(config) for config in self.decks]
         yield ('decks', decks)
+        if self.media:
+            yield ('media', self.media)
 
 
 class NoteTypeConfig(Config):
@@ -267,9 +270,10 @@ def load_project(path=None):
     file = load_project_config_file(path)
     if not file:
         return None
-    project = ProjectConfig(file=file)
-    load_note_types(project, project.file.contents.get('noteTypes', []))
-    load_decks(project, project.file.contents.get('decks', []))
+    media = file.contents.get('media')
+    project = ProjectConfig(file=file, media=media)
+    load_note_types(project, file.contents.get('noteTypes', []))
+    load_decks(project, file.contents.get('decks', []))
     return project
 
 

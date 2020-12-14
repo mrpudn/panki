@@ -29,6 +29,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 ### [Unreleased]
 ...
 
+### [0.1.1] - 2020-12-14
+#### Added
+- Media file support
+#### Changed
+- Removed unsupported panki convert and merge commands
+
 ### [0.1.0] - 2020-11-20
 #### Added
 - Gitlab CI pipeline integration

@@ -10,7 +10,7 @@ from .util import strip_lines
 class File:
 
     def __init__(self, path=None, contents=None):
-        self.path = os.path.abspath(path)
+        self.path = os.path.abspath(path) if path else None
         self.contents = contents or []
 
     def exists(self):
@@ -329,7 +329,8 @@ def create_file(path=None, contents=None):
 
 
 def file_extension(path):
-    return path[path.rfind('.'):]
+    ext_start = path.rfind('.')
+    return path[ext_start:] if ext_start >= 0 else None
 
 
 def soup(value, features='html.parser'):
