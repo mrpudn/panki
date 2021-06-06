@@ -2,8 +2,8 @@ import os
 import click
 from .cli import cli
 from ..config import ProjectConfig
-from ..file import create_config_file, create_css_file, create_data_file, \
-    create_template_file
+from ..file import create_config_file, create_css_file, create_js_file, \
+    create_data_file, create_template_file
 from ..util import bad_param, generate_id, multi_opt, strip_split
 
 
@@ -39,6 +39,8 @@ def create_id():
 @click.option(
     '--css', **multi_opt(2), help='Set the css for a note type.')
 @click.option(
+    '--js', **multi_opt(2), help='Set the js for a note type.')
+@click.option(
     '--card-type', 'card_types', **multi_opt(3),
     help='Set the name and template path for a note type\'s card type.')
 @click.option(
@@ -57,8 +59,9 @@ def create_id():
     '--format', default='json', help='Set the project config file format.')
 @click.pass_context
 def create_project(
-        ctx, directory, name, package, note_types, note_type_configs, fields,
-        css, card_types, decks, deck_configs, deck_packages, notes, format):
+        ctx, directory, name, package,
+        note_types, note_type_configs, fields, css, js, card_types,
+        decks, deck_configs, deck_packages, notes, format):
     """Scaffold out a new panki project.
 
     Options that control note type configuration require the note type name as
@@ -78,6 +81,10 @@ def create_project(
     \b
     $ panki create project periodic-table \\
         --css "Element Symbol" common.css,symbol.css
+
+    \b
+    $ panki create project periodic-table \\
+        --js "Element Symbol" common.js,script.js
 
     \b
     $ panki create project periodic-table \\
@@ -134,6 +141,16 @@ def create_project(
             )
             file = create_css_file(resolved_path)
             note_type.add_css(path, file)
+    for name, js_paths in js:
+        note_type = project.find_or_add_note_type(name=name)
+        js_paths = strip_split(js_paths)
+        for path in js_paths:
+            resolved_path = project.resolve_path(
+                path=path,
+                relative_to=note_type.path
+            )
+            file = create_js_file(resolved_path)
+            note_type.add_js(path, file)
     for name, card_type_name, path in card_types:
         note_type = project.find_or_add_note_type(name=name)
         card_type = note_type.add_card_type(name=card_type_name)

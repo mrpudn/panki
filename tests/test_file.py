@@ -85,6 +85,20 @@ class TestFile(unittest.TestCase):
     ]
     css_str = ''.join([line + '\n' for line in css_contents])
 
+    js_contents = [
+        '  function foo(bar) {',
+        '      var i = 10;',
+        '      return bar + i;',
+        '  }'
+    ]
+    js_contents_pretty = [
+        'function foo(bar) {',
+        '  var i = 10;',
+        '  return bar + i;',
+        '}'
+    ]
+    js_str = ''.join([line + '\n' for line in js_contents])
+
     template_contents = {
         'front': [
             '<span class="awesome">',
@@ -105,6 +119,12 @@ class TestFile(unittest.TestCase):
             '      text-align: center;',
             '      color: black;',
             '      background-color: white;',
+            '    }'
+        ],
+        'script': [
+            '    function foo(bar) {',
+            '      var i = 10;',
+            '      return bar + i;',
             '    }'
         ]
     }
@@ -129,6 +149,12 @@ class TestFile(unittest.TestCase):
             '  color: black;',
             '  background-color: white;',
             '}'
+        ],
+        'script': [
+            'function foo(bar) {',
+            '  var i = 10;',
+            '  return bar + i;',
+            '}'
         ]
     }
     template_str = '\n'.join([
@@ -142,6 +168,12 @@ class TestFile(unittest.TestCase):
         '      background-color: white;',
         '    }',
         '  </style>',
+        '  <script>',
+        '    function foo(bar) {',
+        '      var i = 10;',
+        '      return bar + i;',
+        '    }',
+        '  </script>',
         '  <front>',
         '    <span class="awesome">',
         '      {Front}',
@@ -331,6 +363,11 @@ class TestFile(unittest.TestCase):
         file.prettify()
         self.assertEqual(file.contents, self.css_contents_pretty)
 
+    def test_prettify_js_file(self):
+        file = panki.file.JsFile('file.js', self.js_contents)
+        file.prettify()
+        self.assertEqual(file.contents, self.js_contents_pretty)
+
     def test_read_template_file(self):
         file = panki.file.TemplateFile('file.html')
         _open = mock_open(read_data=self.template_str)
@@ -344,7 +381,10 @@ class TestFile(unittest.TestCase):
         _open = mock_open(read_data='')
         with patch('panki.file.open', _open):
             file.read()
-        self.assertEqual(file.contents, {'front': [], 'back': [], 'style': []})
+        self.assertEqual(
+            file.contents,
+            {'front': [], 'back': [], 'style': [], 'script': []}
+        )
         _open.assert_called_with(file.path, 'r')
 
     @patch('panki.file.os.path.abspath')
@@ -565,3 +605,45 @@ class TestFile(unittest.TestCase):
     def test_create_css_file_bad_format(self):
         with self.assertRaises(ValueError):
             panki.file.create_css_file('file.asdf')
+
+    @patch('panki.file.os.path.abspath')
+    def test_load_js_file(self, _abspath):
+        _abspath.side_effect = lambda p: p
+        args = [
+            ('file.js', panki.file.JsFile, self.js_str, self.js_contents)
+        ]
+        for path, cls, read_data, contents in args:
+            with self.subTest(path=path):
+                _open = mock_open(read_data=read_data)
+                with patch('panki.file.open', _open):
+                    file = panki.file.load_js_file(path)
+                self.assertEqual(file.path, path)
+                self.assertEqual(file.contents, contents)
+                self.assertIsInstance(file, cls)
+                _open.assert_called_with(file.path, 'r')
+
+    def test_load_js_file_bad_format(self):
+        with self.assertRaises(ValueError):
+            panki.file.load_js_file('file.asdf')
+
+    @patch('panki.file.os.path.abspath')
+    def test_create_js_file(self, _abspath):
+        _abspath.side_effect = lambda p: p
+        args = [
+            ('file.js', panki.file.JsFile)
+        ]
+        for path, cls in args:
+            with self.subTest(path=path):
+                contents = [
+                    'function foo() {',
+                    '  return 4;',
+                    '}'
+                ]
+                file = panki.file.create_js_file(path, contents)
+                self.assertEqual(file.path, path)
+                self.assertEqual(file.contents, contents)
+                self.assertIsInstance(file, cls)
+
+    def test_create_js_file_bad_format(self):
+        with self.assertRaises(ValueError):
+            panki.file.create_js_file('file.asdf')
