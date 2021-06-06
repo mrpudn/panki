@@ -122,6 +122,12 @@ class CssFile(File):
         self.contents = reindent('\n'.join(self.contents)).splitlines()
 
 
+class JsFile(File):
+
+    def prettify(self):
+        self.contents = reindent('\n'.join(self.contents)).splitlines()
+
+
 class TemplateFile(File):
 
     def __init__(self, path=None, contents=None):
@@ -153,29 +159,47 @@ class TemplateFile(File):
     def style(self, contents):
         self.contents['style'] = contents
 
+    @property
+    def script(self):
+        return self.contents.get('script', [])
+
+    @script.setter
+    def script(self, contents):
+        self.contents['script'] = contents
+
     def read(self):
         with open(self.path, 'r') as file:
             template = soup(file).template
             self.front = []
-            front = template.find('front') if template else None
-            if front:
-                lines = ''.join(map(str, front.contents)).split('\n')
-                self.front = [line for line in lines if line.strip()]
+            if template:
+                front = template.find('front', recursive=False)
+                if front:
+                    lines = ''.join(map(str, front.contents)).split('\n')
+                    self.front = [line for line in lines if line.strip()]
             self.back = []
-            back = template.find('back') if template else None
-            if back:
-                lines = ''.join(map(str, back.contents)).split('\n')
-                self.back = [line for line in lines if line.strip()]
+            if template:
+                back = template.find('back', recursive=False)
+                if back:
+                    lines = ''.join(map(str, back.contents)).split('\n')
+                    self.back = [line for line in lines if line.strip()]
             self.style = []
-            style = template.find('style') if template else None
-            if style:
-                lines = ''.join(map(str, style.contents)).split('\n')
-                self.style = [line for line in lines if line.strip()]
+            if template:
+                style = template.find('style', recursive=False)
+                if style:
+                    lines = ''.join(map(str, style.contents)).split('\n')
+                    self.style = [line for line in lines if line.strip()]
+            self.script = []
+            if template:
+                script = template.find('script', recursive=False)
+                if script:
+                    lines = ''.join(map(str, script.contents)).split('\n')
+                    self.script = [line for line in lines if line.strip()]
 
     def write(self):
         with open(self.path, 'w') as file:
             file.write('<template>\n')
             self.write_style_element(file)
+            self.write_script_element(file)
             self.write_front_element(file)
             self.write_back_element(file)
             file.write('</template>\n')
@@ -204,10 +228,19 @@ class TemplateFile(File):
                 file.write('    {}\n'.format(line))
             file.write('  </style>\n')
 
+    def write_script_element(self, file):
+        script = self.script
+        if script:
+            file.write('  <script>\n')
+            for line in script:
+                file.write('    {}\n'.format(line))
+            file.write('  </script>\n')
+
     def prettify(self):
         self.prettify_front()
         self.prettify_back()
         self.prettify_style()
+        self.prettify_script()
 
     def prettify_front(self):
         front_str = '\n'.join(self.front)
@@ -224,6 +257,11 @@ class TemplateFile(File):
         style.prettify()
         self.style = style.contents
 
+    def prettify_script(self):
+        script = JsFile(contents=self.script)
+        script.prettify()
+        self.script = script.contents
+
 
 file_extension_map = {
     '.json': JsonFile,
@@ -231,12 +269,14 @@ file_extension_map = {
     '.yml': YamlFile,
     '.csv': CsvFile,
     '.css': CssFile,
+    '.js': JsFile,
     '.html': TemplateFile
 }
 config_file_extensions = ('.json', '.yaml', '.yml')
 data_file_extensions = ('.csv', '.json', '.yaml', '.yml')
-template_extensions = ('.html')
-css_extensions = ('.css')
+template_extensions = ('.html',)
+css_extensions = ('.css',)
+js_extensions = ('.js',)
 
 
 def load_config_file(path):
@@ -313,6 +353,25 @@ def require_css_file(path):
 
 def is_css_file(path):
     return file_extension(path) in css_extensions
+
+
+def load_js_file(path):
+    require_js_file(path)
+    return load_file(path)
+
+
+def create_js_file(path, contents=None):
+    require_js_file(path)
+    return create_file(path, contents)
+
+
+def require_js_file(path):
+    if not is_js_file(path):
+        raise ValueError('path is not a supported script file format')
+
+
+def is_js_file(path):
+    return file_extension(path) in js_extensions
 
 
 def load_file(path):

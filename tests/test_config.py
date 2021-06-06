@@ -17,6 +17,7 @@ class TestConfig(unittest.TestCase):
                     'name': 'Note Type 1',
                     'fields': ['FieldOne', 'FieldTwo'],
                     'css': ['common.css', 'note-type1.css'],
+                    'js': ['common.js', 'note-type1.js'],
                     'cardTypes': [
                         {
                             'name': 'Card Type 1',
@@ -61,6 +62,7 @@ class TestConfig(unittest.TestCase):
             'name': 'Note Type 2',
             'fields': ['FieldA', 'FieldB'],
             'css': 'common.css',
+            'js': 'common.js',
             'cardTypes': [
                 {
                     'name': 'Card Type 3',
@@ -101,6 +103,19 @@ class TestConfig(unittest.TestCase):
         ]
     }
 
+    js_files = {
+        'common.js': [
+            'function foo() {',
+            '  return 4;',
+            '}'
+        ],
+        'note-type1.js': [
+            'function note_type_1() {',
+            '  return "Note Type 1";',
+            '}'
+        ]
+    }
+
     template_files = {
         'card-type1.html': {
             'front': [
@@ -111,7 +126,12 @@ class TestConfig(unittest.TestCase):
                 '<br>',
                 '<span class="notetype1">{{FieldTwo}}</span>'
             ],
-            'style': []
+            'style': [],
+            'script': [
+                'function card_type_1() {',
+                '  return "Card Type 1";',
+                '}'
+            ]
         },
         'card-type2.html': {
             'front': [
@@ -122,7 +142,8 @@ class TestConfig(unittest.TestCase):
                 '<br>',
                 '{{FieldTwo}}'
             ],
-            'style': []
+            'style': [],
+            'script': []
         },
         'card-type3.html': {
             'front': [
@@ -133,7 +154,8 @@ class TestConfig(unittest.TestCase):
                 '<br>',
                 '<span class="notetype2">{{FieldB}}</span>'
             ],
-            'style': []
+            'style': [],
+            'script': []
         }
     }
 
@@ -162,7 +184,8 @@ class TestConfig(unittest.TestCase):
 
     files = {
         path: contents
-        for group in (config_files, css_files, template_files, data_files)
+        for group in (
+            config_files, css_files, js_files, template_files, data_files)
         for path, contents in group.items()
     }
 
@@ -294,6 +317,8 @@ class TestConfig(unittest.TestCase):
         )
         note_type.add_css(path='common.css')
         note_type.add_css(path='note-type1.css')
+        note_type.add_js(path='common.js')
+        note_type.add_js(path='note-type1.js')
         card_type = note_type.add_card_type(name='Card Type 1')
         card_type.set_template(path='card-type1.html')
         note_type.add_card_type(path='card-type2.json')
@@ -355,6 +380,8 @@ class TestConfig(unittest.TestCase):
                 expected = self.files.get(note_type.path)
                 if not isinstance(expected['css'], list):
                     expected['css'] = [expected['css']]
+                if not isinstance(expected['js'], list):
+                    expected['js'] = [expected['js']]
                 self.assertEqual(note_type.file.contents, expected)
                 note_type.file.create_path_to.assert_called_once()
                 note_type.file.write.assert_called_once()
@@ -401,6 +428,8 @@ class TestConfig(unittest.TestCase):
         for note_type in project.note_types:
             for css in note_type.css:
                 css.file = MagicMock()
+            for js in note_type.js:
+                js.file = MagicMock()
             for card_type in note_type.card_types:
                 card_type.template.file = MagicMock()
         for deck in project.decks:
@@ -414,6 +443,9 @@ class TestConfig(unittest.TestCase):
             for css in note_type.css:
                 css.file.create_path_to.assert_called_once()
                 css.file.write.assert_called_once()
+            for js in note_type.js:
+                js.file.create_path_to.assert_called_once()
+                js.file.write.assert_called_once()
             for card_type in note_type.card_types:
                 card_type.template.file.create_path_to.assert_called_once()
                 card_type.template.file.write.assert_called_once()
@@ -456,6 +488,7 @@ class TestConfig(unittest.TestCase):
         )
         expected = self.config_files['note-type2.json']
         expected['css'] = [expected['css']]
+        expected['js'] = [expected['js']]
         self.assertEqual(dict(project.note_types[1]), expected)
         for file, path in [
             (project.note_types[0].css[0].file, 'common.css'),
@@ -464,6 +497,13 @@ class TestConfig(unittest.TestCase):
         ]:
             self.assertEqual(file.path, path)
             self.assertEqual(file.contents, self.css_files[path])
+        for i, (file, path) in enumerate([
+            (project.note_types[0].js[0].file, 'common.js'),
+            (project.note_types[0].js[1].file, 'note-type1.js'),
+            (project.note_types[1].js[0].file, 'common.js')
+        ]):
+            self.assertEqual(file.path, path)
+            self.assertEqual([i] + file.contents, [i] + self.js_files[path])
         # card type files
         self.assertIsNone(project.note_types[0].card_types[0].file)
         self.assertEqual(

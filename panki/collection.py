@@ -2,7 +2,7 @@ import base64
 import os
 import sqlite3
 import anki
-from .file import create_css_file, create_file
+from .file import create_css_file, create_js_file, create_file
 
 
 def build_collection(project):
@@ -33,10 +33,23 @@ def add_note_types(collection, project):
         combined_css_file = create_css_file('combined.css', [])
         for css in note_type.css:
             combined_css_file.contents += css.file.contents
+        common_js_file = create_js_file('common.js', [])
+        for js in note_type.js:
+            common_js_file.contents += js.file.contents
         for card_type in note_type.card_types:
             template = collection.models.new_template(card_type.name)
             template_file = card_type.template.file
-            template['qfmt'] = '\n'.join(template_file.front)
+            # add the js code in the template
+            combined_js_file = create_js_file('combined.js', [])
+            combined_js_file.contents += ['<script>']
+            combined_js_file.contents += common_js_file.contents
+            combined_js_file.contents += template_file.script
+            combined_js_file.contents += ['</script>']
+            combined_js_file.prettify()
+            # prepend front with js code
+            front = template_file.front
+            front = combined_js_file.contents + front
+            template['qfmt'] = '\n'.join(front)
             template['afmt'] = '\n'.join(template_file.back)
             collection.models.add_template(model, template)
             combined_css_file.contents += template_file.style

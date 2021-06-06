@@ -1,7 +1,7 @@
 import os
 import shutil
 from .file import create_config_file, load_config_file, load_css_file, \
-    load_data_file, load_template_file
+    load_data_file, load_js_file, load_template_file
 from .util import generate_id
 
 
@@ -133,19 +133,25 @@ class NoteTypeConfig(Config):
 
     def __init__(
             self, path=None, file=None, id=None, name=None, fields=None,
-            css=None, card_types=None):
+            css=None, js=None, card_types=None):
         super().__init__(path, file)
         config = (file.contents or {}) if file else {}
         self.id = id or config.get('id') or generate_id()
         self.name = name or config.get('name')
         self.fields = fields or config.get('fields') or []
         self.css = css or []
+        self.js = js or []
         self.card_types = card_types or []
 
     def add_css(self, path=None, file=None):
         css = FileConfig(path, file)
         self.css.append(css)
         return css
+
+    def add_js(self, path=None, file=None):
+        js = FileConfig(path, file)
+        self.js.append(js)
+        return js
 
     def add_card_type(self, **kwargs):
         card_type = CardTypeConfig(**kwargs)
@@ -160,6 +166,8 @@ class NoteTypeConfig(Config):
     def save_files(self):
         for css in self.css:
             css.save()
+        for js in self.js:
+            js.save()
         for card_type in self.card_types:
             card_type.save_files()
 
@@ -170,6 +178,9 @@ class NoteTypeConfig(Config):
         if self.css:
             css = [config.path for config in self.css]
             yield ('css', css)
+        if self.js:
+            js = [config.path for config in self.js]
+            yield ('js', js)
         card_types = [
             config.path or dict(config)
             for config in self.card_types
@@ -316,6 +327,16 @@ def load_note_type(project, config):
         )
         css_file = load_css_file(resolved_path)
         note_type.add_css(css_path, css_file)
+    js_paths = config.get('js', [])
+    if not isinstance(js_paths, list):
+        js_paths = [js_paths]
+    for js_path in js_paths:
+        resolved_path = project.resolve_path(
+            js_path,
+            relative_to=note_type.path
+        )
+        js_file = load_js_file(resolved_path)
+        note_type.add_js(js_path, js_file)
     load_note_type_card_types(project, note_type, config.get('cardTypes', []))
 
 
